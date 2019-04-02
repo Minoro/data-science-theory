@@ -77,7 +77,8 @@ def calcular_fitness(populacao):
     itens_populacao = get_itens_populacao(populacao)
     
     fitness_values = []
-    for itens_individuo in itens_populacao:
+    for index, itens_individuo in enumerate(itens_populacao):
+        individuo = populacao[index]
         fitness_values.append( sum_itens(itens_individuo) )
         
     return fitness_values
@@ -227,14 +228,15 @@ def fitness_ajustado(populacao, limite_peso):
         #transforma o fitenss em negativo
         f_individuo['valor'] = f_individuo['valor'] * -1
         #f_individuo['valor'] = f_individuo['valor'] - 5000
+        #f_individuo['valor'] = 0 
         
         fitness_penalizada.append(f_individuo)
         
         if f_individuo['valor'] < fitness_minimo:
             fitness_minimo = f_individuo['valor']
     
-    return fitness_penalizada
-    #return shift_fitness_list(fitness_penalizada, -1 * fitness_minimo)
+    #return fitness_penalizada
+    return shift_fitness_list(fitness_penalizada, -1 * fitness_minimo)
     #return shift_fitness_list(fitness_penalizada, -5000)
 
 # Desloca os valores fitness pelo valor informado
@@ -285,14 +287,15 @@ def plot(melhores, media, piores):
 
 
 limite_peso = 120 #C
-tamanho_populacao = 6 #Np
+tamanho_populacao = 60 #Np
 probabilidade_mutacao = 0.05 # Pm
 probabilidade_crossover = 0.9 #Pc
-maximo_geracoes = 10
+maximo_geracoes = 500
  
 populacao_inicial = gerar_populacao_inicial(itens_disponiveis, tamanho_populacao)
-fitness_inicial = fitness_ajustado(populacao_inicial, limite_peso)
-
+# fitness_inicial = fitness_ajustado(populacao_inicial, limite_peso)
+fitness_inicial = calcular_fitness(populacao_inicial)
+                                   
 melhores_individuos = []
 melhores_fitness = []
 piores_fitness = []
@@ -302,30 +305,32 @@ geracao = 0
 
 while geracao < maximo_geracoes:
     
-    populacao = selecao_roleta(populacao_inicial)
-    populacao = crossover(populacao, probabilidade_crossover)
+    pares = selecao_roleta(populacao_inicial)
+    populacao = crossover(pares, probabilidade_crossover)
     populacao = mutar(populacao, probabilidade_mutacao)
     
     
-    pais_e_filhos = list(populacao)
+    fitness_geracao_atual = fitness_ajustado(populacao, limite_peso)
     
-    fitness_geracao_atual = fitness_ajustado(pais_e_filhos, limite_peso)
     populacao_inicial, fitness_selecionados = selecionar_nova_populacao(
-            pais_e_filhos, 
+            populacao, 
             list(fitness_inicial + fitness_geracao_atual),
             tamanho_populacao
     )
     
-    fitness_inicial = list(fitness_geracao_atual)
-    
+    #fitness_inicial = list(fitness_geracao_atual)
+    fitness_inicial = calcular_fitness(fitness_geracao_atual)
     
     melhores_individuos.append(populacao_inicial[0])
-    #fitness_real = fitness_ajustado([populacao_inicial[0]], limite_peso)
-   #fitness_real = sorted(list(fitness_real), key=lambda k: -k['valor']) 
+   
+    itens = get_itens_individuo(populacao_inicial[0])
+    soma = sum_itens(itens)
+    if soma['peso'] > limite_peso:
+        soma['valor'] = 0
+        
+    melhores_fitness.append(soma)
+    #melhores_fitness.append(fitness_selecionados[0])
     
-   # melhores_fitness.append(fitness_real[0])
-    
-    melhores_fitness.append(fitness_selecionados[0])
     piores_fitness.append(fitness_selecionados[-1])
     fitness_medio.append(media_fitness(fitness_selecionados))
     
