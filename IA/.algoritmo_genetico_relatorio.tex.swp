@@ -316,7 +316,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 	\input{exemplo_melhor_mochila_100_500_08_005.tex}
 }
 
-Desse modo, observando tanto o valor fitness encontrado como o número de mochilas com melhor valor podemos observar que o método de reparação obteve um número muito maior de soluções.
+\bigbreak
+
+Observando tanto o valor fitness encontrado como o número de mochilas com melhor valor podemos observar que o método de reparação obteve um número muito maior de soluções. As saídas omitidas podem ser vistas em: https://github.com/Minoro/data-science-theory/tree/master/IA
 
 
 \section{Comparação de Cálculo de Fitness}
@@ -355,6 +357,12 @@ Comparando as abordagens, nesse cenário, para o pior caso temos para ambas as s
 Dessa forma,temos que o cálculo da penalização é mais eficiente, pois há chances que não aplicar o cálculo de fitness a todos os indivíduos.
 
 Vale lembrar que o cálculo do peso da mochila não está sendo levado em consideração, caso este cálculo seja considerado a reparação se torna ainda pior na comparação. Uma vez que é necessário calcular o peso da mochila para cada item removido.
+
+\section{Considerações}
+
+A abordagem utilizando a reparação tem uma melhora notável sobre a penalização, obtendo um número maior de mochilas com o maior resultado encontrado. Observando os gráficos das gerações pode-se observar que a reparação sempre se manteve acima da penalização, exibindo os melhores resultados. 
+
+A melhora, provavelmente, se dá devido ao fato de não haver indivíduos infactíveis após a reparação, e com isso se obtém melhores valores de fintess e uma convergência mais rápida para o valor ótimo.
 
 
 \end{document}
