@@ -53,81 +53,29 @@ def gerar_populacao_inicial(itens_disponiveis, tamanho_populacao):
     return [ [random.choice([0,1]) for i in range(num_max_itens)] for j in range(tamanho_populacao)] 
 
 
-def print_geracao(geracao):
-    for g in geracao:
-        print('\n')
-        for gene in g:
-            print('%s ' %(gene), end='', flush=True)
+def calcular_fitness(populacao):
+    fitness = []
+    for individuo in populacao:
+        itens = get_itens_individuo(individuo)
+        fitness.append(sum_itens(itens))
     
-# recupera os indices dos valores selecionados para serem inseridos na mochila
-def get_index_populacao(populacao):
-    return [[index for (index, item) in enumerate(itens_disponiveis) if p[index]] for p in populacao]
-
-# recupera os itens selecionados da população
-def get_itens_populacao(populacao):
-    return [[item for (index, item) in enumerate(itens_disponiveis) if p[index]] for p in populacao]
-
-# recupera os itens de um unico individuo da população
+    return fitness
+    
 def get_itens_individuo(individuo):
     return [item for (index, item) in enumerate(itens_disponiveis) if individuo[index]]
 
-# Função fitness para uma população
-# Retorna a soma dos pesos e valores de cada item da mochila
-def calcular_fitness(populacao):
-    itens_populacao = get_itens_populacao(populacao)
-    
-    fitness_values = []
-    for index, itens_individuo in enumerate(itens_populacao):
-        individuo = populacao[index]
-        fitness_values.append( sum_itens(itens_individuo) )
-        
-    return fitness_values
-
-# Função fitness para um unico indivíduo da população
-def fitness_individuo(individuo):
-    itens_individuo = get_itens_individuo(individuo)
-    
-    return sum_itens(itens_individuo)
-
-def fitness_normalizada(populacao):
-    fitness_values = calcular_fitness(populacao)
-    fitness_total = sum_fitness(fitness_values)
-    normalizado = []
-    
-    for individuo in populacao:
-        f = fitness_individuo(individuo)
-        f_normalizado = {
-            'peso': f['peso'] / fitness_total['peso'], 
-            'valor': f['valor'] / fitness_total['valor']
-        }
-        
-        normalizado.append(f_normalizado)
-        
-    return normalizado
-    
-# Retorna a soma do peso dos indivíduos
-def get_peso_individuo(individuo):
-    peso = 0
-    for item in get_itens_individuo(individuo):
-        peso += item['peso']
-    return peso
-
-# Soma todos os valores da função fitness apresentados
-def sum_fitness(fitness_values):
-    return sum_itens(fitness_values)
-
-# soma os pesos e valores dos itens apresentados
 def sum_itens(itens):
-    soma_peso = 0
-    soma_valor = 0
+    peso = 0
+    valor = 0
     for item in itens:
-        soma_peso += item['peso']
-        soma_valor += item['valor']
+        peso += item['peso']
+        valor += item['valor']
     
-    return {'peso': soma_peso, 'valor': soma_valor}
-   
-def selecao_roleta(populacao):
-    p = fitness_normalizada(populacao)
+    return {'peso' : peso, 'valor' : valor}
+
+
+def selecao_roleta(populacao, fitness):
+    p = normalizar_fitness(fitness)
     
     selecionados = []
     for individuo in populacao:
@@ -142,6 +90,19 @@ def selecao_roleta(populacao):
         selecionados.append(populacao[index_individuo_selecionado])
     
     return selecionados
+
+def normalizar_fitness(fitness):
+    total = sum_itens(fitness)
+    
+    normalizado = []
+    for f in fitness:
+        normalizado.append({
+                'peso': f['peso']/total['peso'],
+                'valor': f['valor']/total['valor'],
+        })
+    
+    return normalizado
+
 
 
 def crossover(populacao, probabilidade):
@@ -175,7 +136,7 @@ def crossover(populacao, probabilidade):
         crossovered.append(filho_2)
     
     return crossovered
-        
+
 def select_and_remove(populacao):
     #index_individuo = random.randrange(len(populacao))
     index_individuo = 0 # seleciona sempre os primeiro
@@ -185,10 +146,11 @@ def select_and_remove(populacao):
     
     return individuo
 
+
 def mutar(populacao, probabilidade):
     
     for (index, individuo) in enumerate(populacao):
-        populacao[index] = mutar_individuo(individuo, probabilidade)
+        populacao[index] = mutar_individuo(list(individuo), probabilidade)
     
     return populacao
 
@@ -200,143 +162,89 @@ def mutar_individuo(individuo, probabilidade):
         if(probabilidade < p_not_mutar):
             continue
         
-        individuo[index] = inverter_gene(individuo[index])
+        if individuo[index] == 1:
+            individuo[index] = 0
+        else:
+            individuo[index] = 1
     
     return individuo
 
-def inverter_gene(gene):
-    if gene == 1:
-        return 0
-    return 1
+def selecionar_sobreviventes(fitness_populacao, tamanho_populacao):
+    sobreviventes = sorted(fitness_populacao, key=lambda f: f['valor'], reverse=True)
+    
+    num_sobreviventes = 0
+    selecionados = []
+    fitness = []
+    while num_sobreviventes < tamanho_populacao:
+        selecionados.append(list(sobreviventes[num_sobreviventes]['individuo']))
+        fitness.append({
+                'peso': sobreviventes[num_sobreviventes]['peso'], 
+                'valor' : sobreviventes[num_sobreviventes]['valor']
+        })
+        num_sobreviventes += 1
+    
+    return selecionados, fitness
 
 
 def fitness_ajustado(populacao, limite_peso):
     fitness_minimo = 0
+  
     fitness_penalizada = []
     for index, individuo in enumerate(populacao):
         
-        f_individuo = dict(fitness_individuo(individuo))
-        f_individuo['individuo'] = individuo
-        
+        f_individuo = sum_itens(get_itens_individuo(individuo))
+        #adiciona o indice do individuo para auxiliar a seleção da próxima geração
+        f_individuo['individuo'] = list(individuo) 
         peso = f_individuo['peso']
-        
+
         #peso permitido
         if peso <= limite_peso:
-            fitness_penalizada.append(f_individuo)
+            # conta um cálculo de fintess
+            fitness_penalizada.append(f_individuo.copy())
             continue
     
         #transforma o fitenss em negativo
-        f_individuo['valor'] = f_individuo['valor'] * -1
-        #f_individuo['valor'] = f_individuo['valor'] - 5000
-        #f_individuo['valor'] = 0 
+        f_individuo['valor'] = f_individuo['valor']/f_individuo['peso']
         
         fitness_penalizada.append(f_individuo)
         
-        if f_individuo['valor'] < fitness_minimo:
+        if f_individuo['valor'] > fitness_minimo:
             fitness_minimo = f_individuo['valor']
-    
-    #return fitness_penalizada
-    return shift_fitness_list(fitness_penalizada, -1 * fitness_minimo)
-    #return shift_fitness_list(fitness_penalizada, -5000)
-
-# Desloca os valores fitness pelo valor informado
-def shift_fitness_list(fitness_list, shift):
-    for f_individuo in fitness_list:
-        f_individuo['valor'] += shift
-
-    return fitness_list
-            
-
-# Seleciona os melhores indivídus sobreviventes para a próxima geração
-def selecionar_nova_populacao(populacao, fitness_ajustado, tamanho_geracao):
-    fitness_populacao = sorted(list(fitness_ajustado), key=lambda k: -k['valor']) 
-   
-    nova_geracao = []
-    i = 0
-    while i < tamanho_geracao:
-        #indice_selecionado = fitness_populacao[i]['index']
-        #nova_geracao.append(populacao[indice_selecionado])
-        nova_geracao.append(list(fitness_populacao[i]['individuo']))
         
-        i += 1
-        
-    return (nova_geracao, fitness_populacao[:tamanho_geracao])
-
-
-def media_fitness(fitness_list):
-    total = sum_itens(fitness_list)
-    size = len(fitness_list)
-    return {'valor' : total['valor']/size, 'peso': total['peso']/size } 
+    return fitness_penalizada
 
 
 
-def plot(melhores, media, piores):
-    melhores_valores = [item['valor'] for item in melhores]
-    valores_medios = [item['valor'] for item in media]
-    piores_valores = [item['valor'] for item in piores]
-    
-    geracoes = [i for i in range(len(melhores_valores))]
-    
-    plt.plot(
-        geracoes, melhores_valores, 'r--', 
-        geracoes, valores_medios, 'b--',
-        geracoes, piores_valores, 'g--',
-    )
-    plt.show()
+print('Iniciando')
 
+Np = 6
+num_g = 10
 
-
-limite_peso = 120 #C
-tamanho_populacao = 60 #Np
-probabilidade_mutacao = 0.05 # Pm
-probabilidade_crossover = 0.9 #Pc
-maximo_geracoes = 500
- 
-populacao_inicial = gerar_populacao_inicial(itens_disponiveis, tamanho_populacao)
-# fitness_inicial = fitness_ajustado(populacao_inicial, limite_peso)
-fitness_inicial = calcular_fitness(populacao_inicial)
-                                   
-melhores_individuos = []
-melhores_fitness = []
-piores_fitness = []
-fitness_medio = []
+pais = gerar_populacao_inicial(itens_disponiveis, Np)
+fitness = calcular_fitness(pais)
+probabilidade_crossover = 0.9
+probabilidade_mutacao = 0.05
+limite_peso = 120
 
 geracao = 0
-
-while geracao < maximo_geracoes:
+while geracao < num_g:
     
-    pares = selecao_roleta(populacao_inicial)
-    populacao = crossover(pares, probabilidade_crossover)
-    populacao = mutar(populacao, probabilidade_mutacao)
+    selecionados_crusamento = selecao_roleta(pais, fitness)
+    
+    filhos = crossover(selecionados_crusamento, probabilidade_crossover)
+    filhos = mutar(filhos, probabilidade_mutacao)
     
     
-    fitness_geracao_atual = fitness_ajustado(populacao, limite_peso)
+    populacao_penalizada = fitness_ajustado(pais + filhos, limite_peso)
+    pais, fitness = selecionar_sobreviventes(populacao_penalizada, Np)
     
-    populacao_inicial, fitness_selecionados = selecionar_nova_populacao(
-            populacao, 
-            list(fitness_inicial + fitness_geracao_atual),
-            tamanho_populacao
-    )
-    
-    #fitness_inicial = list(fitness_geracao_atual)
-    fitness_inicial = calcular_fitness(fitness_geracao_atual)
-    
-    melhores_individuos.append(populacao_inicial[0])
-   
-    itens = get_itens_individuo(populacao_inicial[0])
-    soma = sum_itens(itens)
-    if soma['peso'] > limite_peso:
-        soma['valor'] = 0
-        
-    melhores_fitness.append(soma)
-    #melhores_fitness.append(fitness_selecionados[0])
-    
-    piores_fitness.append(fitness_selecionados[-1])
-    fitness_medio.append(media_fitness(fitness_selecionados))
+    fitness_populacao = sorted(fitness, key=lambda f: f['valor'], reverse=True)
     
     geracao += 1
+    print(fitness_populacao[0])
+    
+print(fitness)
 
 
-plot(melhores_fitness, fitness_medio, piores_fitness)
 
 print('fim')
