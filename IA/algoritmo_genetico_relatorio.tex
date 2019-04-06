@@ -90,22 +90,22 @@ Dessa forma, caso os itens da mochila do indivíduo estejam dentro do limite per
 
 \section{Penalização x Reparação}
 
-A figura \ref{fig:ag_comparacao_500_500_09_01} exibe um exemplo da comparação das abordagens de desenvolvimento em que o tamanho da população  ($Np = 500$) é igual ao número de gerações, com uma probabilidade de crossover de 90\% e 10\% de mutação. A curva vermelha represanta a penalização e a azul a reparação.
+A figura \ref{fig:ag_comparacao_500_500_09_01} exibe um exemplo da comparação das abordagens de desenvolvimento em que o tamanho da população  ($Np = 500$) é igual ao número de gerações, com uma probabilidade de crossover de $Pc = 90\%$ e $Pm = 10\%$ de mutação. A curva vermelha represanta a penalização e a azul a reparação.
 
-A figura \ref{fig:comparacao_500_500_08_005} exibe um exemplo da comparação das abordagens de desenvolvimento em que o tamanho da população  ($Np = 500$) é igual ao número de gerações, com uma probabilidade de crossover de 80\% e 5\% de mutação.
+A figura \ref{fig:comparacao_500_500_08_005} exibe os resultados para $Np = 500$ e gerações igual ao número de gerações, com $ Pm = 80\% $ e $Pc = 5\%$.
 
 
-A figura \ref{fig:comparacao_populacao_menor_geracao} exibe um exemplo da comparação das abordagens de desenvolvimento em que o tamanho da população  ($Np = 100$) é \textbf{inferior} ao número de gerações ($Ng = 500$). A figura \ref{fig:comparacao_100_500_09_01} representa uma configuração com $Pc = 90\%$ e $Pm = 10\% $ e a figura \ref{fig:comparacao_100_500_08_005} ilustra $Pc = 80\%$ e $ Pm = 5\%$ de mutação.
+A figura \ref{fig:comparacao_populacao_menor_geracao} exibe o gráfico para tamanho da população  ($Np = 100$) \textbf{inferior} ao número de gerações ($Ng = 500$). A figura \ref{fig:comparacao_100_500_09_01} representa uma configuração com $Pc = 90\%$ e $Pm = 10\% $ e a figura \ref{fig:comparacao_100_500_08_005} ilustra $Pc = 80\%$ e $ Pm = 5\%$ de mutação.
 
-\begin{figure}[!htb]
+\begin{figure}[h]
 	\centering
 	\subfloat[Np=500 Pc=90\% Pm=10\%]{
-		\includegraphics[height=5cm]{ag_comparacao_500_500_09_01.png}
+		\includegraphics[scale=0.4]{ag_comparacao_500_500_09_01.png}
 		\label{fig:ag_comparacao_500_500_09_01}
 	}
 	\quad %espaco separador
 	\subfloat[Np=500 Pc=80\% Pm=5\%]{
-		\includegraphics[height=5cm]{ag_comparacao_500_500_08_005.png}
+		\includegraphics[scale=0.4]{ag_comparacao_500_500_08_005.png}
 		\label{fig:comparacao_500_500_08_005}
 	}
 	\caption{Gráficos de comparação entre as abordagens de penalização e reparação com população \textbf{igual} ao número de gerações}
@@ -113,15 +113,15 @@ A figura \ref{fig:comparacao_populacao_menor_geracao} exibe um exemplo da compar
 \end{figure}
 
 
-\begin{figure}[!htb]
+\begin{figure}[!h]
 	\centering
 	\subfloat[Np=100 Ng=500 Pc=90\% Pm=10\%]{
-		\includegraphics[height=5cm]{ag_comparacao_100_500_09_01.png}
+		\includegraphics[scale=0.4]{ag_comparacao_100_500_09_01.png}
 		\label{fig:comparacao_100_500_09_01}
 	}
 	\quad %espaco separador
 	\subfloat[Np=100 Ng=500 Pc=80\% Pm=5\%]{
-		\includegraphics[height=5cm]{ag_comparacao_100_500_08_005.png}
+		\includegraphics[scale=0.4]{ag_comparacao_100_500_08_005.png}
 		\label{fig:comparacao_100_500_08_005}
 	}
 	\caption{Gráficos de comparação entre as abordagens de penalização e reparação com população \textbf{menor} que o número de gerações}
@@ -136,22 +136,13 @@ Para a reparação nota-se um crescimento rápido nas primeiras gerações e ent
 
 A vantagem da reparação é não permitir que indivíduos não factíveis passem para as próximas gerações, sempre havendo uma melhora (ou estabilização) de uma geração para a outra. Enquanto que o uso penalização pode haver indivíduos não factíveis, principalmente nas primeiras gerações. Então, caso haja uma inicialização ruim (com muitos indivíduos infactíveis) pode haver uma demora maior para a melhora das soluções.
 
-É interessante notar que com uma probabilidade de crossover de 80\% e probabilidade de mutação de 5\% a penalização teve uma leve melhora em relação à sua configuração com $Pc = 90\%$ e $Pm = 10\%$, porém ainda ficando abaixo da reparação.
-
 \section{Soluções encontradas}
-Abordagem: Penalização
 
-Tamanho População (Np): 500 
+Todos os testes foram executados dez vezes, com um número máximo de 500 gerações. O número de mochilas apresentados leva em consideração todas as execuções. Nessa seção só será exibida uma mochila devido o tamanho da saída.
 
-Máximo gerações: 500 
+Abordagem: Penalização; Tamanho População (Np): 500; P. Crossover (Pc): 90\%; P. Mutação (Pm): 10\% 
 
-P. Crossover (Pc): 90\% 
-
-P. Mutação (Pm): 10\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 496 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na 3ª geração de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 496 mochilas com valor igual a melhor solução. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_penalizacao_500_500_09_01.tex}
@@ -165,19 +156,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 
 
 
-Abordagem: Reparação
+Abordagem: Reparação; Tamanho População (Np): 500; Máximo gerações: 500; P. Crossover (Pc): 90\%; P. Mutação (Pm): 10\% 
 
-Tamanho População (Np): 500 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 90\% 
-
-P. Mutação (Pm): 10\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 3936 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na geração 146ª de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 3936 mochilas com valor igual a melhor solução. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_500_500_09_01.tex}
@@ -187,19 +168,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 \bigbreak
 
 
-Abordagem: Penalização
+Abordagem: Penalização; Tamanho População (Np): 500; Máximo gerações: 500; P. Crossover (Pc): 80\%; P. Mutação (Pm): 50\% 
 
-Tamanho População (Np): 500 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 80\% 
-
-P. Mutação (Pm): 50\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 499 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na geração 2ª de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 499 mochilas com valor igual a melhor solução. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_penalizacao_500_500_08_005.tex}
@@ -209,19 +180,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 
 
 
-Abordagem: Reparação
+Abordagem: Reparação; Tamanho População (Np): 500; Máximo gerações: 500; P. Crossover (Pc): 80\%; P. Mutação (Pm): 50\% 
 
-Tamanho População (Np): 500 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 80\% 
-
-P. Mutação (Pm): 50\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 4584 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na geração 23ª de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 4584 mochilas com valor igual a melhor solução. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_500_500_08_005.tex}
@@ -231,19 +192,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 
 
 
-Abordagem: Penalização
+Abordagem: Penalização; Tamanho População (Np): 100; Máximo gerações: 500; P. Crossover (Pc): 90\%; P. Mutação (Pm): 10\% 
 
-Tamanho População (Np): 100 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 90\% 
-
-P. Mutação (Pm): 10\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 993 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na 3ª geração de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 993 mochilas com valor igual a melhor. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_penalizacao_100_500_09_01.tex}
@@ -254,19 +205,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 
 
 
-Abordagem: Reparação
+Abordagem: Reparação; Tamanho População (Np): 100; Máximo gerações: 500; P. Crossover (Pc): 90\%; P. Mutação (Pm): 10\% 
 
-Tamanho População (Np): 100 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 90\% 
-
-P. Mutação (Pm): 10\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 3312 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na 94ª geração de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 3312 mochilas com valor igual a melhor. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_100_500_09_01.tex}
@@ -276,19 +217,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 
 \bigbreak
 
-Abordagem: Penalização
+Abordagem: Penalização; Tamanho População (Np): 100; Máximo gerações: 500; P. Crossover (Pc): 80\%; P. Mutação (Pm): 5\% 
 
-Tamanho População (Np): 100 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 80\% 
-
-P. Mutação (Pm): 5\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 418 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na 18ª geração de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 418 mochilas com valor igual a melhor. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_penalizacao_100_500_08_005.tex}
@@ -298,19 +229,9 @@ Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
 
 
 
-Abordagem: Reparação
+Abordagem: Reparação; Tamanho População (Np): 100; Máximo gerações: 500; P. Crossover (Pc): 80\%; P. Mutação (Pm): 5\% 
 
-Tamanho População (Np): 100 
-
-Máximo gerações: 500 
-
-P. Crossover (Pc): 80\% 
-
-P. Mutação (Pm): 5\% 
-
-Executando o algoritmo dez vezes obteve-se um total de 3946 mochilas com valor igual a melhor solução (contando todas as execuções). A primeira solução foi encontrada na 18ª geração de 500.
-
-Exemplos de mochila (demais exemplos omitidos devido ao tamanho da saída):
+Executando o algoritmo dez vezes obteve-se um total de 3946 mochilas com valor igual a melhor. Exemplos de mochila:
 
 \texttt{
 	\input{exemplo_melhor_mochila_100_500_08_005.tex}
@@ -357,12 +278,5 @@ Comparando as abordagens, nesse cenário, para o pior caso temos para ambas as s
 Dessa forma,temos que o cálculo da penalização é mais eficiente, pois há chances que não aplicar o cálculo de fitness a todos os indivíduos.
 
 Vale lembrar que o cálculo do peso da mochila não está sendo levado em consideração, caso este cálculo seja considerado a reparação se torna ainda pior na comparação. Uma vez que é necessário calcular o peso da mochila para cada item removido.
-
-\section{Considerações}
-
-A abordagem utilizando a reparação tem uma melhora notável sobre a penalização, obtendo um número maior de mochilas com o maior resultado encontrado. Observando os gráficos das gerações pode-se observar que a reparação sempre se manteve acima da penalização, exibindo os melhores resultados. 
-
-A melhora, provavelmente, se dá devido ao fato de não haver indivíduos infactíveis após a reparação, e com isso se obtém melhores valores de fintess e uma convergência mais rápida para o valor ótimo.
-
 
 \end{document}

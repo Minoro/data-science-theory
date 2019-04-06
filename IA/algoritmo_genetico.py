@@ -1,4 +1,5 @@
 import random
+import math
 import matplotlib.pyplot as plt
 
 # população inicial do problema
@@ -204,7 +205,7 @@ def fitness_ajustado(populacao, limite_peso):
             continue
     
         #transforma o fitenss em negativo
-        f_individuo['valor'] = f_individuo['valor']/f_individuo['peso']
+        f_individuo['valor'] = math.log2(f_individuo['valor'])
         
         fitness_penalizada.append(f_individuo)
         
@@ -217,8 +218,8 @@ def fitness_ajustado(populacao, limite_peso):
 
 print('Iniciando')
 
-Np = 6
-num_g = 10
+Np = 50
+num_g = 500
 
 pais = gerar_populacao_inicial(itens_disponiveis, Np)
 fitness = calcular_fitness(pais)
@@ -237,14 +238,7 @@ while geracao < num_g:
     
     populacao_penalizada = fitness_ajustado(pais + filhos, limite_peso)
     pais, fitness = selecionar_sobreviventes(populacao_penalizada, Np)
-    
-    fitness_populacao = sorted(fitness, key=lambda f: f['valor'], reverse=True)
-    
+        
     geracao += 1
-    print(fitness_populacao[0])
-    
-print(fitness)
-
-
 
 print('fim')
